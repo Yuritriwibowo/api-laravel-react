@@ -1,0 +1,86 @@
+.navbar {
+  background: #ffffff;
+  padding: 12px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #007bff;
+  letter-spacing: 0.5px;
+}
+
+/* Menu kanan */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+/* Link Home & Cart */
+.nav-item {
+  text-decoration: none;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  position: relative;
+  transition: 0.25s ease;
+}
+
+/* Efek hover underline modern */
+.nav-item::after {
+  content: "";
+  width: 0%;
+  height: 2px;
+  background: #007bff;
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  transition: 0.25s;
+  border-radius: 10px;
+}
+
+.nav-item:hover {
+  color: #007bff;
+}
+
+.nav-item:hover::after {
+  width: 100%;
+}
+
+/* Tombol Admin Login di pojok kanan */
+.nav-button {
+  padding: 9px 16px;
+  background: #007bff;
+  color: white;
+  font-size: 15px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.25s;
+}
+
+.nav-button:hover {
+  background: #005fcc;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .nav-right {
+    margin-top: 10px;
+  }
+}

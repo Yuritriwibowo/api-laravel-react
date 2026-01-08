@@ -1,0 +1,247 @@
+/* ============================
+ GLOBAL STYLE (MODERN UI)
+============================ */
+
+body {
+  background: #f4f6fb;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ============================
+ CARD MODERN
+============================ */
+.card-modern,
+.modern-card {
+  border-radius: 18px !important;
+  background: rgba(255,255,255,0.9) !important;
+  border: none !important;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transition: 0.25s ease;
+}
+
+.card-modern:hover,
+.modern-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.12);
+}
+
+/* ============================
+ IMAGE
+============================ */
+.book-img,
+.cart-img {
+  border-radius: 12px;
+  object-fit: cover;
+  transition: 0.3s ease;
+}
+
+.book-img:hover {
+  transform: scale(1.05);
+}
+
+/* ============================
+ BUTTON MODERN
+============================ */
+.btn-modern,
+.modern-btn {
+  border-radius: 12px !important;
+  font-weight: 600;
+  padding: 12px 18px;
+  transition: 0.25s ease;
+}
+
+.btn-modern:hover,
+.modern-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.15);
+}
+
+/* ============================
+ ANIMASI
+============================ */
+.fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================
+ NAVBAR
+============================ */
+.nav-modern {
+  backdrop-filter: blur(14px);
+  background: rgba(255,255,255,0.85) !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.nav-modern .nav-link {
+  font-weight: 600;
+  color: #333 !important;
+  transition: 0.25s ease;
+}
+
+.nav-modern .nav-link:hover {
+  color: #0d6efd !important;
+  transform: translateY(-2px);
+}
+
+.hover-up {
+  transition: 0.25s ease;
+}
+.hover-up:hover {
+  transform: translateY(-3px);
+}
+
+.navbar-brand:hover {
+  transform: scale(1.05);
+  transition: 0.25s;
+}
+
+/* ============================
+ CART PAGE (MODERN)
+============================ */
+
+/* Card item cart */
+.cart-item {
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+  transition: 0.25s;
+}
+
+.cart-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+/* Gambar cart */
+.cart-img {
+  width: 80px;
+  height: 110px;
+}
+
+/* Qty control */
+.qty-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qty-control button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 8px;
+  background: #e7e9f1;
+  font-weight: bold;
+  transition: 0.25s;
+}
+
+.qty-control button:hover {
+  background: #0d6efd;
+  color: #fff;
+}
+
+.qty-control span {
+  margin: 6px 0;
+  font-weight: 600;
+}
+
+/* Summary card (kanan) */
+.summary-card {
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff, #f4f6ff);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 100px;
+}
+
+/* ============================
+ TABLE MODERN
+============================ */
+.modern-table thead {
+  background: #f1f3fa;
+  border-bottom: 2px solid #dfe4f1;
+}
+
+.modern-table tbody tr {
+  transition: 0.25s;
+}
+
+.modern-table tbody tr:hover {
+  background: #f7f8ff;
+}
+
+/* ============================
+ ADMIN PAGE
+============================ */
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+/* SIDEBAR */
+.admin-sidebar {
+  width: 250px;
+  background: rgba(35,40,52,0.95);
+  backdrop-filter: blur(20px);
+  color: white;
+  padding: 25px;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.15);
+}
+
+.sidebar-title {
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.sidebar-btn {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  background: #4c5cff;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  transition: 0.25s;
+}
+
+.sidebar-btn:hover {
+  background: #6472ff;
+  transform: translateY(-3px);
+}
+
+.sidebar-logout {
+  width: 100%;
+  padding: 12px;
+  margin-top: 30px;
+  border-radius: 12px;
+  border: none;
+  color: white;
+  background: #e63946;
+  transition: 0.25s;
+}
+
+.sidebar-logout:hover {
+  background: #ff4a58;
+  transform: translateY(-3px);
+}
+
+/* MAIN CONTENT */
+.admin-main {
+  flex-grow: 1;
+  padding: 40px;
+}
+
+.dashboard-title {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
