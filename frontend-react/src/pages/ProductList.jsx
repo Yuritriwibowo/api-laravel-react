@@ -1,52 +1,46 @@
 import { useEffect, useState } from "react";
-import api from "../api";
+import { getProducts, addToCart } from "../api";
 
-export default function Products() {
+export default function ProductList() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    loadProducts();
+    getProducts().then(setProducts);
   }, []);
-
-  const loadProducts = async () => {
-    const res = await api.get("/products");
-    setProducts(res.data);
-  };
 
   return (
     <div className="container py-5">
+      <h2>Daftar Produk</h2>
 
-      <h2 className="fw-bold mb-4">Daftar Produk</h2>
-
-      <div className="row g-4">
+      <div className="row">
         {products.map((p) => (
-          <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={p.id}>
-            <div className="card shadow-sm h-100">
-
-              <img 
-                src={p.image_url}
+          <div className="col-md-3 mb-4" key={p.id}>
+            <div className="card h-100">
+              <img
+                src={`https://tokosiregar.online/uploads/${p.gambar}`}
                 className="card-img-top"
-                style={{ height: "220px", objectFit: "cover" }}
+                alt={p.judul}
+                onError={(e) =>
+                  (e.target.src =
+                    "https://via.placeholder.com/300x200?text=No+Image")
+                }
               />
 
-              <div className="card-body d-flex flex-column">
-
-                <h5 className="card-title">{p.name}</h5>
-                <p className="text-muted">Rp {p.price.toLocaleString()}</p>
+              <div className="card-body">
+                <h5>{p.judul}</h5>
+                <p>Rp {Number(p.harga).toLocaleString("id-ID")}</p>
 
                 <button
-                  className="btn btn-primary mt-auto"
-                  onClick={() => api.post("/cart/add", { product_id: p.id })}
+                  className="btn btn-primary"
+                  onClick={() => addToCart(p.id, 1)}
                 >
                   Tambah ke Keranjang
                 </button>
-
               </div>
             </div>
           </div>
         ))}
       </div>
-
     </div>
   );
 }

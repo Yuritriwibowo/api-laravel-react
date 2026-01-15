@@ -139,7 +139,7 @@ function Cart() {
               >
                 <div className="card-body d-flex align-items-center">
                   <img
-                    src={`http://localhost:8000/uploads/${item.product.gambar}`}
+                    src={`https://tokosiregar.online/uploads/${item.product.gambar}`}
                     alt={item.product.judul}
                     className="cart-img"
                   />

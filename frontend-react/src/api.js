@@ -1,10 +1,24 @@
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:8000/api";
+/* ============================
+   BASE API URL
+============================ */
+const API_URL = import.meta.env.VITE_API_URL;
+
+/* ============================
+   AXIOS INSTANCE
+============================ */
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+});
 
 /* ============================
    AUTH HEADER
-=============================== */
+============================ */
 const userAuthHeader = () => ({
   headers: {
     Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -18,166 +32,121 @@ const adminAuthHeader = () => ({
 });
 
 /* ============================
-   ADMIN LOGIN
-=============================== */
+   AUTH
+============================ */
 export async function adminLogin(email, password) {
-  try {
-    const res = await axios.post(`${API_URL}/admin/login`, {
-      email,
-      password,
-    });
-
-    localStorage.setItem("adminToken", res.data.token);
-    return res.data;
-  } catch (err) {
-    console.error("ADMIN LOGIN ERROR:", err);
-    throw err;
-  }
+  const res = await api.post("/admin/login", { email, password });
+  localStorage.setItem("adminToken", res.data.token);
+  return res.data;
 }
 
-/* ============================
-   USER LOGIN
-=============================== */
 export async function userLogin(email, password) {
-  const res = await axios.post(`${API_URL}/login`, {
-    email,
-    password,
-  });
-
+  const res = await api.post("/login", { email, password });
   localStorage.setItem("userToken", res.data.token);
   return res.data;
 }
 
-/* ============================
-   USER REGISTER
-=============================== */
 export async function userRegister(name, email, password) {
-  const res = await axios.post(`${API_URL}/register`, {
-    name,
-    email,
-    password,
-  });
-
+  const res = await api.post("/register", { name, email, password });
   localStorage.setItem("userToken", res.data.token);
   return res.data;
 }
 
 /* ============================
    PRODUCT
-=============================== */
+============================ */
 export async function getProducts() {
-  const res = await axios.get(`${API_URL}/products`);
-  return res.data;
+  const res = await api.get("/products");
+  return Array.isArray(res.data) ? res.data : [];
 }
 
 export async function getProductById(id) {
-  const res = await axios.get(`${API_URL}/products/${id}`);
+  const res = await api.get(`/products/${id}`);
   return res.data;
 }
 
 export async function createProduct(formData) {
-  const res = await axios.post(
-    `${API_URL}/products`,
-    formData,
-    {
-      ...adminAuthHeader(),
-      headers: {
-        ...adminAuthHeader().headers,
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  const res = await api.post("/products", formData, {
+    ...adminAuthHeader(),
+    headers: {
+      ...adminAuthHeader().headers,
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return res.data;
 }
 
 export async function updateProduct(id, formData) {
   formData.append("_method", "PUT");
 
-  const res = await axios.post(
-    `${API_URL}/products/${id}`,
-    formData,
-    {
-      ...adminAuthHeader(),
-      headers: {
-        ...adminAuthHeader().headers,
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  const res = await api.post(`/products/${id}`, formData, {
+    ...adminAuthHeader(),
+    headers: {
+      ...adminAuthHeader().headers,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
   return res.data;
 }
 
 export async function deleteProduct(id) {
-  const res = await axios.delete(
-    `${API_URL}/products/${id}`,
-    adminAuthHeader()
-  );
+  const res = await api.delete(`/products/${id}`, adminAuthHeader());
   return res.data;
 }
 
 /* ============================
-   CART (USER ONLY)
-=============================== */
-export async function addToCart(productId, qty) {
-  const res = await axios.post(
-    `${API_URL}/cart`,
+   CART
+============================ */
+export async function addToCart(productId, qty = 1) {
+  const token = localStorage.getItem("userToken");
+  if (!token) throw new Error("User belum login");
+
+  const res = await api.post(
+    "/cart",
     { product_id: productId, qty },
-    userAuthHeader()
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
   );
+
   return res.data;
 }
 
 export async function getCart() {
-  const res = await axios.get(
-    `${API_URL}/cart`,
-    userAuthHeader()
-  );
+  const res = await api.get("/cart", userAuthHeader());
   return res.data;
 }
 
 export async function updateCartQty(id, qty) {
-  const res = await axios.put(
-    `${API_URL}/cart/${id}`,
-    { qty },
-    userAuthHeader()
-  );
+  const res = await api.put(`/cart/${id}`, { qty }, userAuthHeader());
   return res.data;
 }
 
 export async function deleteCartItem(id) {
-  const res = await axios.delete(
-    `${API_URL}/cart/${id}`,
-    userAuthHeader()
-  );
+  const res = await api.delete(`/cart/${id}`, userAuthHeader());
   return res.data;
 }
 
 /* ============================
-   ORDER (STEP 3 – CHECKOUT)
-=============================== */
+   ORDER
+============================ */
 export async function createOrder() {
-  const res = await axios.post(
-    `${API_URL}/orders`,
-    {},
-    userAuthHeader()
-  );
+  const res = await api.post("/orders", {}, userAuthHeader());
   return res.data;
 }
 
 /* ============================
    ADMIN ORDER
-=============================== */
+============================ */
 export async function getAdminOrders() {
-  const res = await axios.get(
-    `${API_URL}/admin/orders`,
-    adminAuthHeader()
-  );
+  const res = await api.get("/admin/orders", adminAuthHeader());
   return res.data;
 }
 
 export async function confirmDp(orderId) {
-  const res = await axios.put(
-    `${API_URL}/admin/orders/${orderId}/confirm-dp`,
+  const res = await api.put(
+    `/admin/orders/${orderId}/confirm-dp`,
     {},
     adminAuthHeader()
   );
@@ -185,32 +154,6 @@ export async function confirmDp(orderId) {
 }
 
 export async function deleteOrder(id) {
-  return axios.delete(
-    `${API_URL}/admin/orders/${id}`,
-    adminAuthHeader()
-  );
+  const res = await api.delete(`/admin/orders/${id}`, adminAuthHeader());
+  return res.data;
 }
-
-
-
-/* ============================
-   DEFAULT EXPORT (OPTIONAL)
-=============================== */
-export default {
-  adminLogin,
-  userLogin,
-  userRegister,
-
-  getProducts,
-  getProductById,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-
-  addToCart,
-  getCart,
-  updateCartQty,
-  deleteCartItem,
-
-  createOrder,
-};

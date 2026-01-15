@@ -51,8 +51,8 @@ function Home() {
           <div className="book-card" key={p.id}>
             <div className="image-wrapper">
               <img
-                src={`http://localhost:8000/uploads/${encodeURIComponent(
-                  p.gambar
+                src={`https://tokosiregar.online/uploads/${encodeURIComponent(
+                  p.gambar  
                 )}`}
                 alt={p.judul}
               />
@@ -100,7 +100,7 @@ function Home() {
         {/* GAMBAR */}
         <div className="col-md-5 text-center">
           <img
-            src={`http://localhost:8000/uploads/${encodeURIComponent(
+            src={`https://tokosiregar.online/uploads/${encodeURIComponent(
               selectedBook.gambar
             )}`}
             alt={selectedBook.judul}

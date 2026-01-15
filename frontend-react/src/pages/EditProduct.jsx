@@ -29,7 +29,7 @@ function EditProduct() {
 
     if (data.gambar) {
       setPreview(
-        `http://localhost:8000/uploads/${encodeURIComponent(data.gambar)}`
+        `https://tokosiregar.online/uploads/${encodeURIComponent(data.gambar)}`
       );
     }
   };
