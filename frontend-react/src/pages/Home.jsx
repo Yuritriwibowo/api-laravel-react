@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { getProducts, addToCart } from "../api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { isUserLoggedIn, isAdminLoggedIn } from "../utils/auth";
+import { isUserLoggedIn } from "../utils/auth";
 import "./home.css";
+
+const IMAGE_BASE_URL = "https://api.tokosiregar.online/uploads";
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -11,10 +13,10 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    load();
+    loadProducts();
   }, []);
 
-  const load = async () => {
+  const loadProducts = async () => {
     try {
       const data = await getProducts();
       setProducts(data);
@@ -23,17 +25,13 @@ function Home() {
     }
   };
 
-  // 🔐 PROTEKSI TAMBAH KE KERANJANG
   const handleAddToCart = async (productId) => {
-   
-    // ❌ USER BELUM LOGIN
     if (!isUserLoggedIn()) {
       toast.info("Silakan login terlebih dahulu 🧑‍💻");
       navigate("/login");
       return;
     }
 
-    // ✅ USER LOGIN
     try {
       await addToCart(productId, 1);
       toast.success("Produk berhasil ditambahkan ke keranjang 🛒");
@@ -50,12 +48,12 @@ function Home() {
         {products.map((p) => (
           <div className="book-card" key={p.id}>
             <div className="image-wrapper">
-              <img
-                src={`https://tokosiregar.online/uploads/${encodeURIComponent(
-                  p.gambar  
-                )}`}
-                alt={p.judul}
-              />
+              {p.gambar && (
+                <img
+                  src={`${IMAGE_BASE_URL}/${encodeURIComponent(p.gambar)}`}
+                  alt={p.judul}
+                />
+              )}
             </div>
 
             <div className="book-info">
@@ -82,85 +80,61 @@ function Home() {
         ))}
       </div>
 
-      {/* POPUP DETAIL */}
-{selectedBook && (
-  <div className="popup-overlay" onClick={() => setSelectedBook(null)}>
-    <div
-      className="popup-content popup-modern"
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* HEADER */}
-      <div className="popup-header d-flex justify-content-between align-items-center">
-        <h5 className="fw-bold m-0">{selectedBook.judul}</h5>
-        <button className="btn-close" onClick={() => setSelectedBook(null)} />
-      </div>
+      {/* ================= MODAL DETAIL ================= */}
+      {selectedBook && (
+        <div className="popup-overlay" onClick={() => setSelectedBook(null)}>
+          <div
+            className="popup-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* HEADER */}
+            <div className="popup-header">
+              <h4>{selectedBook.judul}</h4>
+              <button
+                className="close-btn"
+                onClick={() => setSelectedBook(null)}
+              >
+                &times;
+              </button>
+            </div>
 
-      {/* BODY */}
-      <div className="popup-body row mt-3">
-        {/* GAMBAR */}
-        <div className="col-md-5 text-center">
-          <img
-            src={`https://tokosiregar.online/uploads/${encodeURIComponent(
-              selectedBook.gambar
-            )}`}
-            alt={selectedBook.judul}
-            className="img-fluid rounded shadow-sm"
-            style={{ maxHeight: "320px", objectFit: "cover" }}
-          />
-        </div>
+            {/* BODY */}
+            <div className="popup-body">
+              <div className="popup-image">
+                {selectedBook.gambar && (
+                  <img
+                    src={`${IMAGE_BASE_URL}/${encodeURIComponent(
+                      selectedBook.gambar
+                    )}`}
+                    alt={selectedBook.judul}
+                  />
+                )}
+              </div>
 
-        {/* DETAIL */}
-        <div className="col-md-7">
-          <table className="table table-borderless small">
-            <tbody>
-              <tr>
-                <th style={{ width: "35%" }}>Penulis</th>
-                <td>: {selectedBook.penulis}</td>
-              </tr>
-              <tr>
-                <th>Penerbit</th>
-                <td>: {selectedBook.penerbit}</td>
-              </tr>
-              <tr>
-                <th>Tahun Terbit</th>
-                <td>: {selectedBook.tahun_terbit}</td>
-              </tr>
-              <tr>
-                <th>Kategori</th>
-                <td>: {selectedBook.kategori}</td>
-              </tr>
-              <tr>
-                <th>Harga</th>
-                <td className="fw-bold text-primary">
-                  : Rp{" "}
-                  {Number(selectedBook.harga).toLocaleString("id-ID")}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+              <div className="popup-details">
+                <p><strong>Penulis:</strong> {selectedBook.penulis}</p>
+                <p><strong>Penerbit:</strong> {selectedBook.penerbit}</p>
+                <p><strong>Tahun Terbit:</strong> {selectedBook.tahun_terbit}</p>
+                <p><strong>Kategori:</strong> {selectedBook.kategori}</p>
+                <p className="book-price">
+                  Rp {Number(selectedBook.harga).toLocaleString("id-ID")}
+                </p>
+                <p>{selectedBook.deskripsi}</p>
+              </div>
+            </div>
 
-          <div className="mt-2">
-            <strong>Deskripsi:</strong>
-            <p className="text-muted small mt-1">
-              {selectedBook.deskripsi || "Tidak ada deskripsi"}
-            </p>
+            {/* FOOTER */}
+            <div className="popup-footer">
+              <button
+                className="btn-primary"
+                onClick={() => handleAddToCart(selectedBook.id)}
+              >
+                Tambah ke Keranjang
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* FOOTER */}
-      <div className="popup-footer mt-3">
-        <button
-          className="btn btn-primary w-100"
-          onClick={() => handleAddToCart(selectedBook.id)}
-        >
-          Tambah ke Keranjang
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
+      )}
     </div>
   );
 }
